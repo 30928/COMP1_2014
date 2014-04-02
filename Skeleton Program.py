@@ -193,12 +193,12 @@ def PlayGame(Deck, RecentScores):
   while (NoOfCardsTurnedOver < 52) and (not GameOver):
     GetCard(NextCard, Deck, NoOfCardsTurnedOver)
     Choice = ''
-    while (Choice != 'y') and (Choice != 'n'):
+    while (Choice not in ['y', 'Y', 'Yes', 'yes']) and (Choice not in ['n', 'N', 'No', 'no']):
       Choice = GetChoiceFromUser()
     DisplayCard(NextCard)
     NoOfCardsTurnedOver = NoOfCardsTurnedOver + 1
     Higher = IsNextCardHigher(LastCard, NextCard)
-    if (Higher and Choice == 'y') or (not Higher and Choice == 'n'):
+    if (Higher and Choice == ['y', 'Y', 'Yes', 'yes'] ) or (not Higher and Choice == ['n', 'N', 'No', 'no']):
       DisplayCorrectGuessMessage(NoOfCardsTurnedOver - 1)
       LastCard.Rank = NextCard.Rank
       LastCard.Suit = NextCard.Suit
@@ -217,7 +217,7 @@ if __name__ == '__main__':
   for Count in range(1, NO_OF_RECENT_SCORES + 1):
     RecentScores.append(TRecentScore())
   Choice = ''
-  while Choice != 'q':
+  while Choice not in ['q', 'Q', 'Quit', 'quit']:
     DisplayMenu()
     Choice = GetMenuChoice()
     if Choice == '1':
