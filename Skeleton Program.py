@@ -5,6 +5,7 @@
 # version 2 edited 06/03/2014
 
 import random
+import time
 
 NO_OF_RECENT_SCORES = 3
 
@@ -130,6 +131,9 @@ def GetPlayerName():
   print()
   PlayerName = input('Please enter your name: ')
   print()
+  while len(PlayerName) < 1:
+    print('You must enter something for your name!')
+    PlayerName = input('Please enter your name: ')
   return PlayerName
 
 def GetChoiceFromUser():
@@ -159,29 +163,35 @@ def DisplayRecentScores(RecentScores):
   print()
   print('Recent Scores: ')
   print()
+  print('{0:10} {1:30}'.format('Name', 'Score'))
+  print()
   for Count in range(1, NO_OF_RECENT_SCORES + 1):
-    print(RecentScores[Count].Name, 'got a score of', RecentScores[Count].Score)
+    print('{0:10} {1:5}'.format(RecentScores[Count].Name, RecentScores[Count].Score))
   print()
   print('Press the Enter key to return to the main menu')
   input()
   print()
 
 def UpdateRecentScores(RecentScores, Score):
-  PlayerName = GetPlayerName()
-  FoundSpace = False
-  Count = 1
-  while (not FoundSpace) and (Count <= NO_OF_RECENT_SCORES):
-    if RecentScores[Count].Name == '':
-      FoundSpace = True
-    else:
-      Count = Count + 1
-  if not FoundSpace:
-    for Count in range(1, NO_OF_RECENT_SCORES):
-      RecentScores[Count].Name = RecentScores[Count + 1].Name
-      RecentScores[Count].Score = RecentScores[Count + 1].Score
-    Count = NO_OF_RECENT_SCORES
-  RecentScores[Count].Name = PlayerName
-  RecentScores[Count].Score = Score
+  AddToHighScores = input('Do your want to add your score to the high score table? (y or n): ')
+  if AddToHighScores == 'y':
+    PlayerName = GetPlayerName()
+    FoundSpace = False
+    Count = 1
+    while (not FoundSpace) and (Count <= NO_OF_RECENT_SCORES):
+      if RecentScores[Count].Name == '':
+        FoundSpace = True
+      else:
+        Count = Count + 1
+    if not FoundSpace:
+      for Count in range(1, NO_OF_RECENT_SCORES):
+        RecentScores[Count].Name = RecentScores[Count + 1].Name
+        RecentScores[Count].Score = RecentScores[Count + 1].Score
+      Count = NO_OF_RECENT_SCORES
+    RecentScores[Count].Name = PlayerName
+    RecentScores[Count].Score = Score
+  else:
+    print()
 
 def PlayGame(Deck, RecentScores):
   LastCard = TCard()
@@ -198,7 +208,7 @@ def PlayGame(Deck, RecentScores):
     DisplayCard(NextCard)
     NoOfCardsTurnedOver = NoOfCardsTurnedOver + 1
     Higher = IsNextCardHigher(LastCard, NextCard)
-    if (Higher and Choice == ['y', 'Y', 'Yes', 'yes'] ) or (not Higher and Choice == ['n', 'N', 'No', 'no']):
+    if (Higher and Choice in ['y', 'Y', 'Yes', 'yes'] ) or (not Higher and Choice in ['n', 'N', 'No', 'no']):
       DisplayCorrectGuessMessage(NoOfCardsTurnedOver - 1)
       LastCard.Rank = NextCard.Rank
       LastCard.Suit = NextCard.Suit
@@ -211,6 +221,7 @@ def PlayGame(Deck, RecentScores):
     DisplayEndOfGameMessage(51)
     UpdateRecentScores(RecentScores, 51)
 
+#CurrentDate = time.strftime('%d/%m/%y')
 if __name__ == '__main__':
   for Count in range(1, 53):
     Deck.append(TCard())
